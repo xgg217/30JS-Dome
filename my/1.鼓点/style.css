@@ -29,4 +29,17 @@ ul li {
   font-size: 40px;
   text-align: center;
   line-height:2;
+  transition: transform .5s;
+}
+
+/* 按下 */
+.kd {
+  transform: scale(1.2);
+  border-color: yellow;
+  color: yellow;
+}
+
+/* 音乐 */
+.audios {
+  display: none;
 }
