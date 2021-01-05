@@ -31,7 +31,7 @@
       return false;
     });
     if(arr.length) {
-      return [arr[0].doms]
+      return arr
     } else {
       return []
     }
@@ -41,14 +41,17 @@
   document.addEventListener("keydown", function(e) {
     const arr = getDom(e.key.toLocaleUpperCase());
     if(!arr.length) { return }
-    arr[0].classList.add("kd");
+    arr[0].doms.classList.add("kd");
+    console.log(arr[0]);
+    arr[0].audioDom.currentTime = 0;
+    arr[0].audioDom.play();
   });
 
-  // 起来
+  // 弹起
   document.addEventListener("keyup", function(e) {
     const arr = getDom(e.key.toLocaleUpperCase());
     if(!arr.length) { return }
-    arr[0].classList.remove("kd")
+    arr[0].doms.classList.remove("kd")
   });
 
 })();
