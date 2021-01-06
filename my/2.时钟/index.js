@@ -15,6 +15,10 @@
   const fDom = document.querySelector(".f"); // 分针
   const sDom = document.querySelector(".s"); // 时针
 
+  let mTime = 0;
+  let fTime = 0;
+  let sTime = 0;
+
   // 初始化时间
   const init = function init() {
     mDom.style.transform=`rotate(${ ~~(6 * secondsDate) }deg)`; // 秒
@@ -26,8 +30,15 @@
       console.log(~~(15.4 * 11));
       sDom.style.transform=`rotate(${ ~~(30 * hoursDate) }deg)`; // 分针
     }
+
+
   };
-  init()
+  init();
+
+  // 秒针转动
+  const mZd = function mZd() {
+    
+  }
 
 
 })();
