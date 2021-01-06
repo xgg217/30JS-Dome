@@ -43,7 +43,6 @@ section {
   left: 50%;
   transform: translate(-50%) rotate(45deg);
   transform-origin: center bottom;
-
   transition: transform .5s;
 }
 
