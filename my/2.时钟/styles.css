@@ -1,0 +1,68 @@
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+  background-image: url("./images/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden
+}
+
+.box {
+  margin: 150px auto;
+  width: 350px;
+  height: 350px;
+  border: 30px solid #fff;
+  border-radius: 50%;
+  position:relative;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+.cen {
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  transform: translate(-50%, -50%);
+  background-color: #a8c5d1;
+  border-radius: 50%;
+}
+
+.m,
+.f,
+.s {
+  position:absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transform-origin: center bottom;
+
+  transition: transform .5s;
+}
+
+.m {
+  width: 4px;
+  height: 150px;
+  background-color: red;
+  z-index: 100;
+}
+
+.f {
+  width: 10px;
+  height: 120px;
+  background-color: blue;
+}
+
+.s {
+  width: 10px;
+  height: 90px;
+  background-color: yellow;
+}
+
