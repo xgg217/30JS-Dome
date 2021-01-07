@@ -41,7 +41,7 @@ section {
   position:absolute;
   bottom: 50%;
   left: 50%;
-  transform: translate(-50%) rotate(45deg);
+  transform: translate(-50%) rotate(0deg);
   transform-origin: center bottom;
   transition: transform .5s;
 }
