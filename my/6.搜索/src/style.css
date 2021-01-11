@@ -1,0 +1,30 @@
+section {
+  width: 800px;
+  margin: 100px auto;
+  border: 1px solid #000;
+}
+
+section input {
+  width: 600px;
+  line-height: 30px;
+}
+
+ul li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid #000;
+  margin-bottom: 10px;
+}
+
+ul li p:first-child {
+  font-size: 20px;
+  flex: 1;
+}
+ul li p:last-child {
+  width: 35%;
+  color: #666;
+  /* border: 1px solid #000; */
+  text-align: right;
+  
+}
