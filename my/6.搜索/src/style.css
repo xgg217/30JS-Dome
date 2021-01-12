@@ -28,3 +28,7 @@ ul li p:last-child {
   text-align: right;
   
 }
+
+ul li p span {
+  color: red;
+}
