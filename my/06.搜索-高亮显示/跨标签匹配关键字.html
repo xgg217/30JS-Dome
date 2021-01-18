@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>跨标签匹配关键字</title>
+  <style>
+    font {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <input type="text">
+  <div class="box">
+    <p>春江花<b>月</b>夜</p>
+    <p>[唐] 张若虚</p>
+    <ul>
+      <li>
+        <p>春江潮水连海平，海上明<b>月</b>共潮生</p>
+      </li>
+      <li>
+        <p>滟滟随波千万里，何处春江无<b>月</b>明！</p>
+      </li>
+      <li>
+        <p>江流宛转绕芳甸，<b>月</b>照花林皆似霰；</p>
+      </li>
+      <li>
+        <p>空里流霜不觉飞，汀上白沙看不见</p>
+      </li>
+      <li>
+        <p>江天一色无纤尘，皎皎空中孤<b>月</b>轮</p>
+      </li>
+      <li>
+        <p>江畔何人初见<b>月</b>？江<b>月</b>何年初照人？</p>
+      </li>
+      <li>
+        <p>人生代代无穷已，江<b>月</b>年年望相似</p>
+      </li>
+      <li>
+        <p>不知江<b>月</b>待何人，但见长江送流水</p>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+      const inpDom = document.querySelector("input");
+      const boxDom = document.querySelector(".box");
+
+      inpDom.addEventListener("input", function(e) {
+        console.log(e.target.value)
+      });
+
+
+      /**
+       * 思路
+       * 1. 深度优先遍历DOM树取出文本节点
+       * 2. 取出所有文本内容进行拼接
+       * 3. 匹配关键词
+       * 4. 关键词使用font标签替换
+       */
+
+      // 深度优先遍历DOM树取出文本节点
+      function getTextNodeList (dom) {
+        const nodeList = [...dom.childNodes];
+        const textNodes = [];
+        while (nodeList.length) {
+          const node = nodeList.shift()
+          if (node.nodeType === node.TEXT_NODE) {
+            textNodes.push(node)
+          } else {
+            nodeList.unshift(...node.childNodes)
+          }
+        }
+        return textNodes
+      }
+
+      const a = getTextNodeList(boxDom);
+      console.log(a);
+
+      // 取出所有文本内容进行拼接
+      function getTextInfoList (textNodes) {
+        let length = 0
+        const textList = textNodes.map(text => {
+          let start = length, end = length + text.wholeText.length
+          length = end
+          return [text.wholeText, start, end]
+        })
+        return textList
+      }
+
+      const b = getTextInfoList(a);
+      console.log(b);
+
+      const c = b.map(([text]) => text).join('')
+
+      // 3. 匹配关键词
+      function getMatchList (content, keyword) {
+        const characters = [...'[]()?.+*^${}:'].reduce((r, c) => (r[c] = true, r), {})
+        keyword = keyword.split('').map(s => characters[s] ? `\\${s}` : s).join('[\\s\\n]*')
+        const reg = new RegExp(keyword, 'gmi')
+        return [...content.matchAll(reg)] // matchAll结果是个迭代器，用扩展符展开得到数组
+      }
+
+      const d = getMatchList(c, "月")
+
+
+      function replaceMatchResult (textNodes, textList, matchList) {
+        // 对于每一个匹配结果，可能分散在多个标签中，找出这些标签，截取匹配片段并用font标签替换出
+        for (let i = matchList.length - 1; i >= 0; i--) {
+          const match = matchList[i]
+          const matchStart = match.index, matchEnd = matchStart + match[0].length // 匹配结果在拼接字符串中的起止索引
+          // 遍历文本信息列表，查找匹配的文本节点
+          for (let textIdx = 0; textIdx < textList.length; textIdx++) {
+            const [ text, startIdx, endIdx ] = textList[textIdx] // 文本内容、文本在拼接串中开始、结束索引
+            
+            if (endIdx < matchStart) continue // 匹配的文本节点还在后面
+            if (startIdx >= matchEnd) break // 匹配文本节点已经处理完了
+            let textNode = textNodes[textIdx] // 这个节点中的部分或全部内容匹配到了关键词，将匹配部分截取出来进行替换
+            const nodeMatchStartIdx = Math.max(0, matchStart - startIdx) // 匹配内容在文本节点内容中的开始索引
+            const nodeMatchLength = Math.min(endIdx, matchEnd) - startIdx - nodeMatchStartIdx // 文本节点内容匹配关键词的长度
+            if (nodeMatchStartIdx > 0) textNode = textNode.splitText(nodeMatchStartIdx) // textNode取后半部分
+            if (nodeMatchLength < textNode.wholeText.length) textNode.splitText(nodeMatchLength)
+            const font = document.createElement('font')
+            // font.innerText = text.substr(nodeMatchStartIdx, nodeMatchLength)
+            // text
+            
+            font.innerText = text.substring(nodeMatchStartIdx, nodeMatchLength)
+            textNode.parentNode.replaceChild(font, textNode)
+          }
+        }
+      }
+
+      // replaceMatchResult(a, b, d);
+      // console.log(a);
+
+      function replaceKeywords (htmlString, keyword) {
+        if (!keyword) return htmlString
+        const div = document.createElement('div')
+        div.innerHTML = htmlString
+        console.log(div);
+        const textNodes = getTextNodeList(htmlString);
+        console.log(textNodes);
+        const textList = getTextInfoList(textNodes);
+        console.log(textList);
+        const content = textList.map(( [text] ) => text).join('');
+        console.log(content);
+        const matchList = getMatchList(content, keyword);
+        console.log(textNodes);
+        console.log(textList);
+        console.log(matchList);
+        replaceMatchResult(textNodes, textList, matchList)
+        return htmlString.innerHTML
+      }
+
+      const aa = replaceKeywords(boxDom, "江")
+      console.log(aa);
+
+
+
+
+    })();
+  </script>
+</body>
+</html>
