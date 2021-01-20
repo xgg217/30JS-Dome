@@ -187,7 +187,40 @@
     </li>
   </ul>
 
-  <script src="./src/index.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      const liArr = [...document.querySelectorAll("ul li")];
+      const arr = [];
+      console.log(liArr);
+      liArr.forEach(item => {
+        const time = item.dataset.time;
+        if(time) {
+          const timeArr = time.split(":");
+          const timeVal = Number(timeArr[0]) * 60 + Number(timeArr[1]);
+          arr.push(timeVal);
+        }
+      });
+      console.log(arr);
+      const aa = arr.reduce((sum, item) => {
+        return sum + item
+      }, 0);
+      console.log(aa);
+
+      function cc(val) {
+        const xs =  Math.floor(val / 3600);
+        const a = (val % 3600);
+        const fz = Math.floor(a / 60);
+        (a % 60)
+        const str = `${xs}时 ${fz}分 ${a%60}秒`
+        console.log(str);
+      }
+      cc(aa)
+
+      // liArr.
+    })();
+  </script>
 </body>
 
 </html>
